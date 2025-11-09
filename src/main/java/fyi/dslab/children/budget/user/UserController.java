@@ -43,6 +43,21 @@ public class UserController {
 		return "redirect:/users";
 	}
 
+	@GetMapping("/users/{id}/edit")
+	public String editUser(@PathVariable Long id, Model model) {
+		User user = userService.getUser(id);
+		model.addAttribute("user", user);
+		return "user-edit";
+	}
+
+	@PostMapping("/users/{id}")
+	public String updateUser(@PathVariable Long id,
+							 @RequestParam String name,
+							 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthday) {
+		userService.updateUser(id, name, birthday);
+		return "redirect:/users/" + id;
+	}
+
 	@PostMapping("/users/{id}/delete")
 	public String deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);

@@ -60,4 +60,22 @@ public class UserService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public User updateUser(Long id, String name, LocalDate birthday) {
+        User existing = getUser(id);
+        if (name == null || name.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is required");
+        }
+        if (birthday == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Birthday is required");
+        }
+        User updated = new User(
+                existing.id(),
+                name.strip(),
+                existing.balance(),
+                birthday
+        );
+        return repository.save(updated);
+    }
 }

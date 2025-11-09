@@ -13,7 +13,7 @@
 					<th scope="col">Name</th>
 					<th scope="col" style="width: 20%">Birthday</th>
 					<th scope="col" class="text-end" style="width: 20%">Balance</th>
-					<th scope="col" style="width: 10%"></th>
+					<th scope="col" style="width: 12%"></th>
 				</tr>
 				</thead>
 				<tbody>
@@ -33,14 +33,21 @@
 							</td>
 							<td class="text-end fw-semibold">${user.balance()?string["0.00"]}</td>
 							<td class="text-end">
-								<form method="post" action="/users/${user.id()?c}/delete">
-									<button type="submit"
-											class="btn btn-sm btn-outline-danger"
-											onclick="return confirm('Are you sure you want to remove this user and all their transactions?')"
-											title="Remove user">
-										&times;
-									</button>
-								</form>
+								<div class="d-inline-flex gap-2">
+									<a href="/users/${user.id()?c}/edit"
+									   class="btn btn-sm btn-outline-secondary"
+									   title="Edit user">
+										&#9998;
+									</a>
+									<form method="post" action="/users/${user.id()?c}/delete">
+										<button type="submit"
+												class="btn btn-sm btn-outline-danger"
+												onclick="return confirm('Are you sure you want to remove this user and all their transactions?')"
+												title="Remove user">
+											&times;
+										</button>
+									</form>
+								</div>
 							</td>
 						</tr>
 					</#list>
