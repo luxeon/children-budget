@@ -2,6 +2,10 @@
 
 Children Budget is a Spring Boot application that helps parents keep track of their children's balances and transactions.
 
+## Docker Image
+
+The latest container is published at [dshvechikov/children-budget](https://hub.docker.com/repository/docker/dshvechikov/children-budget).
+
 ## UI Examples
 
 | Screen                     | Preview                                           |
