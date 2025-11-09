@@ -51,4 +51,13 @@ public class UserService {
         );
         return repository.save(user);
     }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        boolean exists = repository.existsById(id);
+        if (!exists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        repository.deleteById(id);
+    }
 }

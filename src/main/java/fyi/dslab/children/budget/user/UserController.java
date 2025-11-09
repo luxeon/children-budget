@@ -43,6 +43,12 @@ public class UserController {
 		return "redirect:/users";
 	}
 
+	@PostMapping("/users/{id}/delete")
+	public String deleteUser(@PathVariable Long id) {
+		userService.deleteUser(id);
+		return "redirect:/users";
+	}
+
 		@GetMapping("/users/{id}")
 		public String getUser(@PathVariable Long id,
 							  @RequestParam(name = "page", defaultValue = "0") int page,

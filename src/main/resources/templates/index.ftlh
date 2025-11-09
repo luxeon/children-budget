@@ -13,6 +13,7 @@
 					<th scope="col">Name</th>
 					<th scope="col" style="width: 20%">Birthday</th>
 					<th scope="col" class="text-end" style="width: 20%">Balance</th>
+					<th scope="col" style="width: 10%"></th>
 				</tr>
 				</thead>
 				<tbody>
@@ -31,11 +32,21 @@
 								</#if>
 							</td>
 							<td class="text-end fw-semibold">${user.balance()?string["0.00"]}</td>
+							<td class="text-end">
+								<form method="post" action="/users/${user.id()?c}/delete">
+									<button type="submit"
+											class="btn btn-sm btn-outline-danger"
+											onclick="return confirm('Are you sure you want to remove this user and all their transactions?')"
+											title="Remove user">
+										&times;
+									</button>
+								</form>
+							</td>
 						</tr>
 					</#list>
 				<#else>
 					<tr>
-						<td colspan="4" class="text-center py-4 text-muted">No users found.</td>
+						<td colspan="5" class="text-center py-4 text-muted">No users found.</td>
 					</tr>
 				</#if>
 				</tbody>
