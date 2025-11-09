@@ -28,3 +28,15 @@ Children Budget is a Spring Boot application that helps parents keep track of th
    ./mvnw clean spring-boot:run
    ```
 3. Access endpoints via Basic Auth or use the `/dashboard/{userId}` route for read-only views.
+
+## CI/CD
+
+GitHub Actions (`.github/workflows/ci.yml`) runs automatically for every pull request and push to `main`:
+
+- `build` job checks out the code, installs Temurin JDK 25, and runs `./mvnw clean verify`.
+- `docker` job runs only for successful pushes to `main`, building the provided `Dockerfile` and publishing it to Docker Hub tagged with both the short commit SHA and `latest`.
+
+To enable Docker publishing, configure repository secrets:
+
+- `DOCKERHUB_USERNAME` – Docker Hub account that will own the image.
+- `DOCKERHUB_TOKEN` – Personal access token or password for that account.
