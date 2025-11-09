@@ -37,3 +37,4 @@ build/
 .m2
 
 application-local.yml
+docker/.env

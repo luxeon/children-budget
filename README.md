@@ -2,6 +2,15 @@
 
 Children Budget is a Spring Boot application that helps parents keep track of their children's balances and transactions.
 
+## Self-Hosting
+
+1. Copy `docker/.env.example` to `docker/.env` and set the desired database credentials plus `APP_BASIC_AUTH_*` values.
+2. Pull the latest published image and start the full stack (app + Postgres):
+   ```bash
+   docker compose -f docker/docker-compose.yml --env-file docker/.env up -d
+   ```
+3. The application will be available on `http://localhost:8080` (public dashboard) and protected endpoints can be accessed using the credentials from `.env`.
+
 ## Features
 
 - Parents can manage balances and transactions for each child via authenticated `/users/{id}` pages.
@@ -29,12 +38,17 @@ Children Budget is a Spring Boot application that helps parents keep track of th
    ```
 3. Access endpoints via Basic Auth or use the `/dashboard/{userId}` route for read-only views.
 
+### Docker Compose
+
+- `docker/docker-compose.dev.yml` – spins up only the Postgres database for local development.
+- `docker/docker-compose.yml` – runs the published Docker image (`dshvechikov/children-budget:latest`) plus Postgres. Copy `docker/.env.example` to `docker/.env` and adjust credentials before running `docker compose -f docker/docker-compose.yml --env-file docker/.env up -d`.
+
 ## CI/CD
 
 GitHub Actions (`.github/workflows/ci.yml`) runs automatically for every pull request and push to `main`:
 
 - `build` job checks out the code, installs Temurin JDK 25, and runs `./mvnw clean verify`.
-- `docker` job runs only for successful pushes to `main`, building the provided `Dockerfile` and publishing it to Docker Hub tagged with both the short commit SHA and `latest`.
+- `docker` job runs only for successful pushes to `main`, building the provided `Dockerfile` and publishing it to Docker Hub tagged with both a SemVer-style increment (e.g., `1.0.0`, `1.0.1` …) and `latest`.
 
 To enable Docker publishing, configure repository secrets:
 

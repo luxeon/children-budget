@@ -1,15 +1,37 @@
 services:
+  children-budget-app:
+    image: dshvechikov/children-budget:latest
+    container_name: children-budget-app
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://children-budget-db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+#      SPRING_FLYWAY_URL: jdbc:postgresql://children-budget-db:5432/${POSTGRES_DB}
+#      SPRING_FLYWAY_USER: ${POSTGRES_USER}
+#      SPRING_FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_BASIC_AUTH_USERNAME: ${APP_BASIC_AUTH_USERNAME}
+      APP_BASIC_AUTH_PASSWORD: ${APP_BASIC_AUTH_PASSWORD}
+    ports:
+      - "8081:8080"
+    depends_on:
+      - children-budget-db
 
   children-budget-db:
-    image: postgres:18-alpine
-    restart: always
+    image: postgres:16-alpine
     container_name: children-budget-db
-    shm_size: '256mb'
+    restart: always
+    env_file:
+      - .env
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: children-budget
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+#    ports:
+#      - "5432:5432"
     volumes:
-      - ~/data/docker/cmt/db:/var/lib/postgresql/18/docker:delegated
+      - children-budget-db-data:/var/lib/postgresql/data
+
+volumes:
+  children-budget-db-data:
