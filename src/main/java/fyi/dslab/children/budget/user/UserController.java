@@ -29,6 +29,20 @@ public class UserController {
 		return "index";
 	}
 
+	@GetMapping("/users/new")
+	public String newUserForm(Model model) {
+		model.addAttribute("today", LocalDate.now());
+		return "user-create";
+	}
+
+	@PostMapping("/users")
+	public String createUser(@RequestParam String name,
+							 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthday,
+							 @RequestParam(name = "initialBalance", required = false) BigDecimal initialBalance) {
+		userService.createUser(name, birthday, initialBalance);
+		return "redirect:/users";
+	}
+
 		@GetMapping("/users/{id}")
 		public String getUser(@PathVariable Long id,
 							  @RequestParam(name = "page", defaultValue = "0") int page,

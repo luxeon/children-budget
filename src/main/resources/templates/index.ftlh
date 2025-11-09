@@ -1,8 +1,9 @@
 <#import "layout.ftlh" as layout>
 <@layout.page title="Users">
 	<div class="card shadow-sm">
-		<div class="card-header bg-white">
+		<div class="card-header bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
 			<h1 class="h4 mb-0">Children</h1>
+			<a href="/users/new" class="btn btn-primary btn-sm align-self-start align-self-md-center">Add User</a>
 		</div>
 		<div class="card-body p-0">
 			<table class="table table-striped table-hover mb-0">
