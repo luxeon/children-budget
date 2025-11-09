@@ -2,8 +2,10 @@ package fyi.dslab.children.budget.transaction;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface TransactionRepository extends PagingAndSortingRepository<Transaction, Long> {
+public interface TransactionRepository extends PagingAndSortingRepository<Transaction, Long>,
+        CrudRepository<Transaction, Long> {
     Page<Transaction> findByUserId(Long userId, Pageable pageable);
 }

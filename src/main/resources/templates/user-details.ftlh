@@ -17,6 +17,46 @@
             </div>
         </div>
     </div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+            <h2 class="h5 mb-3 mb-md-0">Add Transaction</h2>
+            <p class="text-muted small mb-0">
+                Debit spends money by default. Switch to credit to add funds.
+            </p>
+        </div>
+        <div class="card-body">
+            <form method="post" action="/users/${user.id()?c}/transactions" class="row g-3">
+                <div class="col-md-4">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Groceries"
+                           required>
+                </div>
+                <div class="col-md-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <input type="number" class="form-control" id="amount" name="amount" min="0.01" step="0.01"
+                           value="1.00" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label d-block">Type</label>
+                    <div class="btn-group" role="group" aria-label="Transaction type">
+                        <input type="radio" class="btn-check" name="type" id="type-debit" value="DEBIT" checked>
+                        <label class="btn btn-outline-danger" for="type-debit">Debit (spend)</label>
+
+                        <input type="radio" class="btn-check" name="type" id="type-credit" value="CREDIT">
+                        <label class="btn btn-outline-success" for="type-credit">Credit (add)</label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label for="occurredOn" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="occurredOn" name="occurredOn"
+                           value="${.now?date?string["yyyy-MM-dd"]}">
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary">Add Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div class="card shadow-sm">
         <#assign displayedTotalPages = (transactionsPage.totalPages?int > 0)?then(transactionsPage.totalPages?int, 1)>
@@ -40,12 +80,23 @@
                     <tbody>
                     <#list transactions as transaction>
                         <#assign amountNumber = transaction.amount()?double>
-                        <#assign amountClass = (amountNumber >= 0)?then("text-success", "text-danger")>
+                        <#if (amountNumber >= 0)>
+                            <#assign amountClass = "text-success">
+                        <#else>
+                            <#assign amountClass = "text-danger">
+                        </#if>
+                        <#assign occurredOn = transaction.occurredOn()>
                         <tr>
-                            <td class="text-muted">${transaction.occurredOn()?string["MMM d, yyyy"]}</td>
+                            <td class="text-muted">
+                                <#if occurredOn?is_date>
+                                    ${occurredOn?string["MMM d, yyyy"]}
+                                <#else>
+                                    ${occurredOn}
+                                </#if>
+                            </td>
                             <td>${transaction.description()}</td>
                             <td class="text-end fw-semibold ${amountClass}">
-                                <#if amountNumber >= 0>+</#if>${transaction.amount()?string["0.00"]}
+                                <#if (amountNumber >= 0)>+</#if>${transaction.amount()?string["0.00"]}
                             </td>
                         </tr>
                     </#list>
