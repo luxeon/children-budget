@@ -2,6 +2,23 @@
 
 Children Budget is a Spring Boot application that helps parents keep track of their children's balances and transactions.
 
+## UI Examples
+
+| Screen                     | Preview                                           |
+|----------------------------|---------------------------------------------------|
+| User list                  | ![User list](screenshots/user-list-page.png)      |
+| User profile               | ![User profile](screenshots/user-page.png)        |
+| User dashboard (read-only) | ![User dashboard](screenshots/dashboard-page.png) |
+| Create user                | ![Create user](screenshots/create-user-page.png)  |
+| Edit user                  | ![Edit user](screenshots/edit-user-page.png)      |
+
+## Features
+
+- Parents can manage balances and transactions for each child via authenticated `/users/{id}` pages.
+- Children can view their balances and transaction histories through public read-only `/dashboard/{id}` pages.
+- Basic authentication protects all management endpoints, while dashboards stay public.
+- A Quartz-powered daily job (run on a cron schedule) credits each child with an age-based bonus, keeping allowances fresh automatically.
+
 ## Self-Hosting
 
 1. Copy `docker/.env.example` to `docker/.env` and set the desired database credentials plus `APP_BASIC_AUTH_*` values.
@@ -10,13 +27,6 @@ Children Budget is a Spring Boot application that helps parents keep track of th
    docker compose -f docker/docker-compose.yml --env-file docker/.env up -d
    ```
 3. The application will be available on `http://localhost:8080` (public dashboard) and protected endpoints can be accessed using the credentials from `.env`.
-
-## Features
-
-- Parents can manage balances and transactions for each child via authenticated `/users/{id}` pages.
-- Children can view their balances and transaction histories through public read-only `/dashboard/{id}` pages.
-- Basic authentication protects all management endpoints, while dashboards stay public.
-- A Quartz-powered daily job (run on a cron schedule) credits each child with an age-based bonus, keeping allowances fresh automatically.
 
 ## Technology Stack
 
