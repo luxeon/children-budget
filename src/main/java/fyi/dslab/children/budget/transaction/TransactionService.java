@@ -77,4 +77,26 @@ public class TransactionService {
         log.info("Recorded {} transaction of {} for user {} (new balance: {})",
                 effectiveType, signedAmount, user.name(), updatedBalance);
     }
+
+    @Transactional
+    public void removeTransaction(Long userId, Long transactionId) {
+        Transaction transaction = repository.findById(transactionId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
+
+        if (!transaction.userId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transaction does not belong to user");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        BigDecimal currentBalance = user.balance() == null ? BigDecimal.ZERO : user.balance();
+        BigDecimal updatedBalance = currentBalance.subtract(transaction.amount());
+
+        repository.deleteById(transactionId);
+        userRepository.updateBalance(user.id(), updatedBalance);
+
+        log.info("Removed transaction {} for user {}. Amount {} deducted from balance. New balance: {}",
+                transactionId, user.name(), transaction.amount(), updatedBalance);
+    }
 }

@@ -4,7 +4,14 @@
         <a href="/users" class="text-decoration-none">&larr; Back to users</a>
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <#if transactionDeleted?? && transactionDeleted>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Transaction was deleted.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </#if>
+
+	<div class="card shadow-sm mb-4">
         <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
             <div class="mb-3 mb-md-0">
                 <p class="text-muted mb-1">Balance</p>
@@ -83,6 +90,7 @@
                         <th scope="col" style="width: 20%">Date</th>
                         <th scope="col">Description</th>
                         <th scope="col" class="text-end" style="width: 20%">Amount</th>
+                        <th scope="col" style="width: 10%"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -105,6 +113,16 @@
                             <td>${transaction.description()}</td>
                             <td class="text-end fw-semibold ${amountClass}">
                                 <#if (amountNumber >= 0)>+</#if>${transaction.amount()?string["0.00"]}
+                            </td>
+                            <td class="text-end">
+                                <form method="post" action="/users/${user.id()?c}/transactions/${transaction.id()?c}/delete">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Are you sure you want to remove this transaction?')"
+                                            title="Remove transaction">
+                                        &times;
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     </#list>

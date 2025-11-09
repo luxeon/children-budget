@@ -29,19 +29,21 @@ public class UserController {
 		return "index";
 	}
 
-	@GetMapping("/users/{id}")
-	public String getUser(@PathVariable Long id,
-						  @RequestParam(name = "page", defaultValue = "0") int page,
-						  @RequestParam(name = "size", defaultValue = "10") int size,
-						  Model model) {
-		User user = userService.getUser(id);
-		Page<Transaction> transactionsPage = transactionService.getTransactionsForUser(id, page, size);
+		@GetMapping("/users/{id}")
+		public String getUser(@PathVariable Long id,
+							  @RequestParam(name = "page", defaultValue = "0") int page,
+							  @RequestParam(name = "size", defaultValue = "10") int size,
+							  @RequestParam(name = "deleted", required = false) Boolean deleted,
+							  Model model) {
+			User user = userService.getUser(id);
+			Page<Transaction> transactionsPage = transactionService.getTransactionsForUser(id, page, size);
 
-		model.addAttribute("user", user);
-		model.addAttribute("transactions", transactionsPage.getContent());
-		model.addAttribute("transactionsPage", transactionsPage);
-		return "user-details";
-	}
+			model.addAttribute("user", user);
+			model.addAttribute("transactions", transactionsPage.getContent());
+			model.addAttribute("transactionsPage", transactionsPage);
+			model.addAttribute("transactionDeleted", deleted != null && deleted);
+			return "user-details";
+		}
 
 	@PostMapping("/users/{id}/transactions")
 	public String addTransaction(@PathVariable Long id,
@@ -53,4 +55,10 @@ public class UserController {
 		transactionService.addTransaction(id, amount, description, occurredOn, type);
 		return "redirect:/users/" + id;
 	}
-}
+
+	@PostMapping("/users/{id}/transactions/{transactionId}/delete")
+		public String deleteTransaction(@PathVariable Long id, @PathVariable Long transactionId) {
+			transactionService.removeTransaction(id, transactionId);
+			return "redirect:/users/" + id + "?deleted=true";
+		}
+	}
