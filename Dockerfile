@@ -1,7 +1,7 @@
-FROM eclipse-temurin:25-alpine AS build
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 
-ADD target/children-budget-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY target/*.jar app.jar
 
 EXPOSE 8080
 
