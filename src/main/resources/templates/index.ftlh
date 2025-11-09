@@ -10,6 +10,7 @@
 				<tr>
 					<th scope="col" style="width: 15%">ID</th>
 					<th scope="col">Name</th>
+					<th scope="col" style="width: 20%">Birthday</th>
 					<th scope="col" class="text-end" style="width: 20%">Balance</th>
 				</tr>
 				</thead>
@@ -21,12 +22,19 @@
 							<td class="fw-medium">
 								<a href="/users/${user.id()?c}" class="text-decoration-none">${user.name()}</a>
 							</td>
+							<td>
+								<#if user.birthday()?is_date>
+									${user.birthday()?string["MMM d, yyyy"]}
+								<#else>
+									${user.birthday()}
+								</#if>
+							</td>
 							<td class="text-end fw-semibold">${user.balance()?string["0.00"]}</td>
 						</tr>
 					</#list>
 				<#else>
 					<tr>
-						<td colspan="3" class="text-center py-4 text-muted">No users found.</td>
+						<td colspan="4" class="text-center py-4 text-muted">No users found.</td>
 					</tr>
 				</#if>
 				</tbody>

@@ -14,6 +14,14 @@
                 <p class="text-muted mb-1">User</p>
                 <p class="h4 mb-0">${user.name()}</p>
                 <p class="text-muted mb-0">ID ${user.id()?c}</p>
+                <p class="text-muted mb-0">
+                    Birthday
+                    <#if user.birthday()?is_date>
+                        ${user.birthday()?string["MMM d, yyyy"]}
+                    <#else>
+                        ${user.birthday()}
+                    </#if>
+                </p>
             </div>
         </div>
     </div>
