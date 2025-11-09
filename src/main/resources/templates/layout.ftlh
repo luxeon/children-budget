@@ -16,7 +16,7 @@
         <#if readOnly>
             <span class="navbar-brand fw-semibold">Children Budget</span>
         <#else>
-            <a class="navbar-brand fw-semibold" href="/users">Children Budget</a>
+            <a class="navbar-brand fw-semibold" href="/">Children Budget</a>
         </#if>
     </div>
 </nav>

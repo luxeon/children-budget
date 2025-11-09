@@ -4,7 +4,7 @@
 
     <#if !isReadOnly>
         <div class="mb-3">
-            <a href="/users" class="text-decoration-none">&larr; Back to users</a>
+            <a href="/" class="text-decoration-none">&larr; Back to users</a>
         </div>
     </#if>
 

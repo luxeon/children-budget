@@ -23,7 +23,7 @@ public class UserController {
 	private final UserService userService;
 	private final TransactionService transactionService;
 
-	@GetMapping({"/", "/users"})
+	@GetMapping("/")
 	public String getUsers(Model model) {
 		model.addAttribute("users", userService.getUsers());
 		return "index";
@@ -40,7 +40,7 @@ public class UserController {
 							 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthday,
 							 @RequestParam(name = "initialBalance", required = false) BigDecimal initialBalance) {
 		userService.createUser(name, birthday, initialBalance);
-		return "redirect:/users";
+		return "redirect:/";
 	}
 
 	@GetMapping("/users/{id}/edit")
@@ -61,7 +61,7 @@ public class UserController {
 	@PostMapping("/users/{id}/delete")
 	public String deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
-		return "redirect:/users";
+		return "redirect:/";
 	}
 
 		@GetMapping("/users/{id}")
