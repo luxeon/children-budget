@@ -1,0 +1,14 @@
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS balance NUMERIC(12, 2) NOT NULL DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS transactions (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    amount NUMERIC(12, 2) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    occurred_on DATE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_transactions_user_date
+    ON transactions (user_id, occurred_on DESC);

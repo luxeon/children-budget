@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Children Budget · Users</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-</head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-	<div class="container">
-		<a class="navbar-brand fw-semibold" href="/users">Children Budget</a>
-	</div>
-</nav>
-
-<main class="container">
+<#import "layout.ftlh" as layout>
+<@layout.page title="Users">
 	<div class="card shadow-sm">
 		<div class="card-header bg-white">
 			<h1 class="h4 mb-0">Children</h1>
@@ -24,6 +10,7 @@
 				<tr>
 					<th scope="col" style="width: 15%">ID</th>
 					<th scope="col">Name</th>
+					<th scope="col" class="text-end" style="width: 20%">Balance</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -31,20 +18,19 @@
 					<#list users as user>
 						<tr>
 							<td class="text-muted">${user.id()?c}</td>
-							<td class="fw-medium">${user.name()}</td>
+							<td class="fw-medium">
+								<a href="/users/${user.id()?c}" class="text-decoration-none">${user.name()}</a>
+							</td>
+							<td class="text-end fw-semibold">${user.balance()?string["0.00"]}</td>
 						</tr>
 					</#list>
 				<#else>
 					<tr>
-					       <td colspan="2" class="text-center py-4 text-muted">No users found.</td>
+						<td colspan="3" class="text-center py-4 text-muted">No users found.</td>
 					</tr>
 				</#if>
 				</tbody>
 			</table>
 		</div>
 	</div>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-</body>
-</html>
+</@layout.page>
