@@ -3,6 +3,7 @@ package fyi.dslab.children.budget.transaction;
 import fyi.dslab.children.budget.user.User;
 import fyi.dslab.children.budget.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionService {
 
     private static final int MAX_PAGE_SIZE = 50;
@@ -71,5 +73,8 @@ public class TransactionService {
         BigDecimal currentBalance = user.balance() == null ? BigDecimal.ZERO : user.balance();
         BigDecimal updatedBalance = currentBalance.add(signedAmount);
         userRepository.updateBalance(user.id(), updatedBalance);
+
+        log.info("Recorded {} transaction of {} for user {} (new balance: {})",
+                effectiveType, signedAmount, user.name(), updatedBalance);
     }
 }

@@ -5,6 +5,7 @@ import fyi.dslab.children.budget.transaction.TransactionType;
 import fyi.dslab.children.budget.user.User;
 import fyi.dslab.children.budget.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AgeBonusService {
 
     private final UserService userService;
@@ -28,17 +30,15 @@ public class AgeBonusService {
             if (birthday == null) {
                 continue;
             }
-            int age = Period.between(birthday, runDate).getYears();
+            int age = Period.between(birthday, runDate)
+                    .getYears();
             if (age <= 0) {
                 continue;
             }
-            transactionService.addTransaction(
-                    user.id(),
-                    BigDecimal.valueOf(age),
-                    "Weekly age bonus",
-                    runDate,
-                    TransactionType.CREDIT
-            );
+            BigDecimal amount = BigDecimal.valueOf(age);
+            transactionService.addTransaction(user.id(), amount, "Weekly age bonus", runDate,
+                    TransactionType.CREDIT);
+            log.info("Executed age bonus job executed for user '{}'.", user.name());
         }
     }
 }
