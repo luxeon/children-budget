@@ -23,3 +23,8 @@ spring:
           no-cache: true
           no-store: true
           must-revalidate: true
+
+app:
+  security:
+    username: ${APP_BASIC_AUTH_USERNAME:}
+    password: ${APP_BASIC_AUTH_PASSWORD:}
