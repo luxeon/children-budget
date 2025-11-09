@@ -1,4 +1,4 @@
-<#macro page title>
+<#macro page title readOnly=false>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +13,11 @@
 <body class="bg-light">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
-        <a class="navbar-brand fw-semibold" href="/users">Children Budget</a>
+        <#if readOnly>
+            <span class="navbar-brand fw-semibold">Children Budget</span>
+        <#else>
+            <a class="navbar-brand fw-semibold" href="/users">Children Budget</a>
+        </#if>
     </div>
 </nav>
 

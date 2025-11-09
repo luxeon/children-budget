@@ -1,10 +1,14 @@
 <#import "layout.ftlh" as layout>
-<@layout.page title=user.name()>
-    <div class="mb-3">
-        <a href="/users" class="text-decoration-none">&larr; Back to users</a>
-    </div>
+<#assign isReadOnly = (readOnly?? && readOnly)>
+<@layout.page title=user.name() readOnly=isReadOnly>
 
-    <#if transactionDeleted?? && transactionDeleted>
+    <#if !isReadOnly>
+        <div class="mb-3">
+            <a href="/users" class="text-decoration-none">&larr; Back to users</a>
+        </div>
+    </#if>
+
+    <#if !isReadOnly && transactionDeleted?? && transactionDeleted>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             Transaction was deleted.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -32,46 +36,48 @@
             </div>
         </div>
     </div>
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-            <h2 class="h5 mb-3 mb-md-0">Add Transaction</h2>
-            <p class="text-muted small mb-0">
-                Debit spends money by default. Switch to credit to add funds.
-            </p>
-        </div>
-        <div class="card-body">
-            <form method="post" action="/users/${user.id()?c}/transactions" class="row g-3">
-                <div class="col-md-4">
-                    <label for="description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" placeholder="Groceries"
-                           required>
-                </div>
-                <div class="col-md-3">
-                    <label for="amount" class="form-label">Amount</label>
-                    <input type="number" class="form-control" id="amount" name="amount" min="0.01" step="0.01"
-                           value="1.00" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label d-block">Type</label>
-                    <div class="btn-group" role="group" aria-label="Transaction type">
-                        <input type="radio" class="btn-check" name="type" id="type-debit" value="DEBIT" checked>
-                        <label class="btn btn-outline-danger" for="type-debit">Debit (spend)</label>
-
-                        <input type="radio" class="btn-check" name="type" id="type-credit" value="CREDIT">
-                        <label class="btn btn-outline-success" for="type-credit">Credit (add)</label>
+    <#if !isReadOnly>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                <h2 class="h5 mb-3 mb-md-0">Add Transaction</h2>
+                <p class="text-muted small mb-0">
+                    Debit spends money by default. Switch to credit to add funds.
+                </p>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/users/${user.id()?c}/transactions" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description" placeholder="Groceries"
+                               required>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <label for="occurredOn" class="form-label">Date</label>
-                    <input type="date" class="form-control" id="occurredOn" name="occurredOn"
-                           value="${.now?date?string["yyyy-MM-dd"]}">
-                </div>
-                <div class="col-12 text-end">
-                    <button type="submit" class="btn btn-primary">Add Transaction</button>
-                </div>
-            </form>
+                    <div class="col-md-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" min="0.01" step="0.01"
+                               value="1.00" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label d-block">Type</label>
+                        <div class="btn-group" role="group" aria-label="Transaction type">
+                            <input type="radio" class="btn-check" name="type" id="type-debit" value="DEBIT" checked>
+                            <label class="btn btn-outline-danger" for="type-debit">Debit (spend)</label>
+
+                            <input type="radio" class="btn-check" name="type" id="type-credit" value="CREDIT">
+                            <label class="btn btn-outline-success" for="type-credit">Credit (add)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="occurredOn" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="occurredOn" name="occurredOn"
+                               value="${.now?date?string["yyyy-MM-dd"]}">
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary">Add Transaction</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    </#if>
 
     <div class="card shadow-sm">
         <#assign displayedTotalPages = (transactionsPage.totalPages?int > 0)?then(transactionsPage.totalPages?int, 1)>
@@ -90,7 +96,9 @@
                         <th scope="col" style="width: 20%">Date</th>
                         <th scope="col">Description</th>
                         <th scope="col" class="text-end" style="width: 20%">Amount</th>
-                        <th scope="col" style="width: 10%"></th>
+                        <#if !isReadOnly>
+                            <th scope="col" style="width: 10%"></th>
+                        </#if>
                     </tr>
                     </thead>
                     <tbody>
@@ -114,16 +122,18 @@
                             <td class="text-end fw-semibold ${amountClass}">
                                 <#if (amountNumber >= 0)>+</#if>${transaction.amount()?string["0.00"]}
                             </td>
-                            <td class="text-end">
-                                <form method="post" action="/users/${user.id()?c}/transactions/${transaction.id()?c}/delete">
-                                    <button type="submit"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="return confirm('Are you sure you want to remove this transaction?')"
-                                            title="Remove transaction">
-                                        &times;
-                                    </button>
-                                </form>
-                            </td>
+                            <#if !isReadOnly>
+                                <td class="text-end">
+                                    <form method="post" action="/users/${user.id()?c}/transactions/${transaction.id()?c}/delete">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Are you sure you want to remove this transaction?')"
+                                                title="Remove transaction">
+                                            &times;
+                                        </button>
+                                    </form>
+                                </td>
+                            </#if>
                         </tr>
                     </#list>
                     </tbody>
