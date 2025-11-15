@@ -79,7 +79,7 @@ Override these values via profile-specific property files or environment variabl
 
 GitHub Actions (`.github/workflows/ci.yml`) runs automatically for every pull request and push to `main`:
 
-- `build` job checks out the code, installs Temurin JDK 25, and runs `./mvnw clean verify`.
+- `build` job checks out the code, installs Temurin JDK 25, runs `./mvnw clean verify`, and uploads the JaCoCo report to [SonarCloud](https://sonarcloud.io/) (`mvn sonar:sonar`) so code coverage and static analysis are enforced. SonarCloud is free for public repos—configure `SONAR_PROJECT_KEY` and `SONAR_ORG` as repository variables plus `SONAR_TOKEN` as a secret.
 - `release` job (pushes to `main`) uses [semantic-release](https://github.com/semantic-release/semantic-release) to analyze commit messages, publish GitHub releases, and output the next semantic version.
 - `docker` job runs after a successful semantic release, building the provided `Dockerfile` and publishing it to Docker Hub tagged with the freshly minted semantic version plus `latest`.
 
@@ -87,3 +87,8 @@ To enable Docker publishing, configure repository secrets:
 
 - `DOCKERHUB_USERNAME` – Docker Hub account that will own the image.
 - `DOCKERHUB_TOKEN` – Personal access token or password for that account.
+
+For SonarCloud analysis also provide:
+
+- `SONAR_TOKEN` secret – token from SonarCloud.
+- `SONAR_PROJECT_KEY` and `SONAR_ORG` repository variables – project key and organization slug you created in SonarCloud.

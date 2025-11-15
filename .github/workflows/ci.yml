@@ -14,6 +14,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+      SONAR_ORG: ${{ vars.SONAR_ORG }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -27,6 +30,11 @@ jobs:
 
       - name: Run tests
         run: mvn -B -ntp clean verify
+
+      - name: SonarCloud scan
+        uses: sonarsource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Upload jar artifact
         uses: actions/upload-artifact@v5
