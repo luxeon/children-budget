@@ -20,6 +20,9 @@
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
         <sonar.projectName>children-budget</sonar.projectName>
+        <sonar.projectKey>luxeon_children-budget</sonar.projectKey>
+        <sonar.organization>luxeon</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>
