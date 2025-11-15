@@ -31,15 +31,6 @@ jobs:
       - name: Run tests
         run: mvn -B -ntp clean verify
 
-      - name: SonarQubeScan
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
-            -Dsonar.organization=${{ vars.SONAR_ORG }}
-
       - name: Upload jar artifact
         uses: actions/upload-artifact@v5
         with:
