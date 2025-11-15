@@ -80,7 +80,8 @@ Override these values via profile-specific property files or environment variabl
 GitHub Actions (`.github/workflows/ci.yml`) runs automatically for every pull request and push to `main`:
 
 - `build` job checks out the code, installs Temurin JDK 25, and runs `./mvnw clean verify`.
-- `docker` job runs only for successful pushes to `main`, building the provided `Dockerfile` and publishing it to Docker Hub tagged with both a SemVer-style increment (e.g., `1.0.0`, `1.0.1` …) and `latest`.
+- `release` job (pushes to `main`) uses [semantic-release](https://github.com/semantic-release/semantic-release) to analyze commit messages, publish GitHub releases, and output the next semantic version.
+- `docker` job runs after a successful semantic release, building the provided `Dockerfile` and publishing it to Docker Hub tagged with the freshly minted semantic version plus `latest`.
 
 To enable Docker publishing, configure repository secrets:
 
