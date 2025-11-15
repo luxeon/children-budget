@@ -35,6 +35,9 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectKey: ${{ env.SONAR_PROJECT_KEY }}
+          organization: ${{ env.SONAR_ORG }}
 
       - name: Upload jar artifact
         uses: actions/upload-artifact@v5
