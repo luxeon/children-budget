@@ -63,7 +63,7 @@ jobs:
 
   docker:
     needs: [build, release]
-    if: needs.release.outputs.release_version
+    if: needs.release.outputs.new_release_published
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
