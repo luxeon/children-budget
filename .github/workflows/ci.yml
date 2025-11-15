@@ -59,6 +59,9 @@ jobs:
     needs: [build, release]
     if: needs.release.outputs.new_release_published
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/children-budget
+      VERSION: ${{ needs.release.outputs.release_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -82,12 +85,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push image
-        env:
-          IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/children-budget
-          VERSION: ${{ needs.release.outputs.release_version }}
-        run: |
-          docker buildx build \
-            --platform linux/amd64,linux/arm64 \
-            --tag $IMAGE_NAME:$VERSION \
-            --tag $IMAGE_NAME:latest \
-            --push .
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ env.IMAGE_NAME }}:latest
