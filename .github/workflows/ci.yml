@@ -7,9 +7,9 @@ permissions:
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -35,6 +35,10 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ vars.SONAR_ORG }}
 
       - name: Upload jar artifact
         uses: actions/upload-artifact@v5
@@ -65,7 +69,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   docker:
-    needs: [build, release]
+    needs: [ build, release ]
     if: needs.release.outputs.new_release_published == 'true'
     runs-on: ubuntu-latest
     env:
