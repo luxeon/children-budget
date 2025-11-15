@@ -11,34 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class AgeBonusService {
+public class WeeklyBonusService {
 
     private final UserService userService;
     private final TransactionService transactionService;
+    private final WeeklyBonusProperties weeklyBonusProperties;
 
     @Transactional
-    public void creditWeeklyAgeBonus(LocalDate runDate) {
+    public void creditWeeklyBonus(LocalDate runDate) {
+        BigDecimal amount = weeklyBonusProperties.getAmount();
         List<User> users = userService.getUsers();
         for (User user : users) {
-            LocalDate birthday = user.birthday();
-            if (birthday == null) {
-                continue;
-            }
-            int age = Period.between(birthday, runDate)
-                    .getYears();
-            if (age <= 0) {
-                continue;
-            }
-            BigDecimal amount = BigDecimal.valueOf(age);
-            transactionService.addTransaction(user.id(), amount, "Weekly age bonus", runDate,
+            transactionService.addTransaction(user.id(), amount, "Weekly allowance bonus", runDate,
                     TransactionType.CREDIT);
-            log.info("Executed age bonus job executed for user '{}'.", user.name());
+            log.info("Credited weekly bonus for user '{}'.", user.name());
         }
     }
 }

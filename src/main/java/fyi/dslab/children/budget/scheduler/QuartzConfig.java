@@ -16,8 +16,9 @@ public class QuartzConfig {
     }
 
     @Bean
-    public Trigger weeklyAgeBonusTrigger(JobDetail weeklyAgeBonusJobDetail) {
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0 ? * MON")
+    public Trigger weeklyAgeBonusTrigger(JobDetail weeklyAgeBonusJobDetail,
+            WeeklyBonusProperties weeklyBonusProperties) {
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(weeklyBonusProperties.getCron())
                 .withMisfireHandlingInstructionFireAndProceed();
 
         return TriggerBuilder.newTrigger()

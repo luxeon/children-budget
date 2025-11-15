@@ -14,13 +14,13 @@ import java.time.LocalDate;
 @Slf4j
 public class WeeklyAgeBonusJob extends QuartzJobBean {
 
-    private final AgeBonusService ageBonusService;
+    private final WeeklyBonusService weeklyBonusService;
 
     @Override
     protected void executeInternal(@NotNull JobExecutionContext context) {
         LocalDate executionDate = LocalDate.now();
         log.info("Starting weekly age bonus job at {}", executionDate);
-        ageBonusService.creditWeeklyAgeBonus(executionDate);
+        weeklyBonusService.creditWeeklyBonus(executionDate);
         log.info("Finished weekly age bonus job at {}", executionDate);
     }
 }

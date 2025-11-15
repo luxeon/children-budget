@@ -1,6 +1,8 @@
 # Children Budget
 
-Children Budget is a Spring Boot application that helps parents keep track of their children's balances and transactions.
+Helps families track kids' balances, allowances, and transactions.
+
+> **Heads up:** this project is vibe-coded for fun. Expect quirks, shortcuts, and rough edges rather than production-grade polish.
 
 ## Docker Image
 
@@ -21,7 +23,7 @@ The latest container is published at [dshvechikov/children-budget](https://hub.d
 - Parents can manage balances and transactions for each child via authenticated `/users/{id}` pages.
 - Children can view their balances and transaction histories through public read-only `/dashboard/{id}` pages.
 - Basic authentication protects all management endpoints, while dashboards stay public.
-- A Quartz-powered daily job (run on a cron schedule) credits each child with an age-based bonus, keeping allowances fresh automatically.
+- A Quartz-powered cron job credits each child with the same configurable bonus amount on a schedule you control, keeping allowances fresh automatically.
 
 ## Self-Hosting
 
@@ -31,6 +33,22 @@ The latest container is published at [dshvechikov/children-budget](https://hub.d
    docker compose -f docker/docker-compose.yml --env-file docker/.env up -d
    ```
 3. The application will be available on `http://localhost:8080` (public dashboard) and protected endpoints can be accessed using the credentials from `.env`.
+
+### Weekly Bonus Job Configuration
+
+The recurring bonus job draws its settings from the `app.weekly-bonus` configuration block. The defaults (see `src/main/resources/application.yml`) look like this:
+
+```yaml
+app:
+  weekly-bonus:
+    amount: 5        # decimal value credited to every child
+    cron: 0 0 0 ? * MON  # Quartz cron syntax
+```
+
+- `amount` must be a positive decimal value and controls how much money each child receives.
+- `cron` is expressed using Quartz cron syntax (seconds minutes hours day-of-month month day-of-week year) so you can decide exactly when the job runs.
+
+Override these values via profile-specific property files or environment variables (e.g., `APP_WEEKLY_BONUS_AMOUNT=10`).
 
 ## Technology Stack
 
